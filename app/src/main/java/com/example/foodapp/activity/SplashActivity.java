@@ -25,7 +25,6 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
-        Paper.init(this);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -40,7 +39,6 @@ public class SplashActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             assert user != null;
-            String userId = user.getUid();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finishAffinity();

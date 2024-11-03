@@ -25,11 +25,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHodel>{
     private Context context;
 
     private CartListener cartListener;
+    String userid;
 
-    public CartAdapter(List<Cart> list, Context context, CartListener cartListener) {
+    public CartAdapter(List<Cart> list, Context context, CartListener cartListener, String userId) {
         this.list = list;
         this.context = context;
         this.cartListener = cartListener;
+        this.userid = userId;
+
     }
 
     @NonNull
@@ -71,12 +74,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHodel>{
         }else {
             Utils.cartList.get(adapterPosition).setAmount(Utils.cartList.get(adapterPosition).getAmount() -1);
         }
-        Paper.book().write("cart",Utils.cartList);
+        Paper.book().write(userid+"cart",Utils.cartList);
     }
 
     private void addtocart(int adapterPosition) {
         Utils.cartList.get(adapterPosition).setAmount(Utils.cartList.get(adapterPosition).getAmount() +1);
-        Paper.book().write("cart",Utils.cartList);
+        Paper.book().write(userid+"cart",Utils.cartList);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.foodapp.activity;
 
-import static java.security.AccessController.getContext;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -15,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.foodapp.R;
@@ -48,26 +48,10 @@ public class CategoryActivity extends AppCompatActivity {
 
         setUI();
         setData();
+        //sreachData();
     }
 
-    private void setData() {
-        viewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        Intent intent = getIntent();
-        int idcate = intent.getIntExtra("idcate",0);
-        String name = intent.getStringExtra("namecate");
-
-        binding.tvCategoryTitle.setText(name);
-
-        viewModel.responseMealsMutableLiveData(idcate).observe(this,responseMeals -> {
-            if(responseMeals.isSuccess()){
-                meals = responseMeals.getResult();
-                adapter = new MealsAdapter(meals,meals -> {
-                        onClickMeal(meals);
-                });
-                binding.rcvCategory.setAdapter(adapter);
-            }
-        });
-
+    private void sreachData() {
         binding.svRcv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -80,19 +64,39 @@ public class CategoryActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void setData() {
+        viewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        Intent intent = getIntent();
+        int idcate = intent.getIntExtra("idcate",0);
+        String name = intent.getStringExtra("namecate");
+
+        binding.tvCategoryTitle.setText(name);
+
+        viewModel.responseMealsMutableLiveData(idcate).observe(this,responseMeals -> {
+            Log.d("thread",Thread.currentThread().getName());
+            if(responseMeals.isSuccess()){
+                meals = responseMeals.getResult();
+                adapter = new MealsAdapter(meals,meals -> {
+                        onClickMeal(meals);
+                });
+                binding.rcvCategory.setAdapter(adapter);
+            }
+        });
+        //sreachData();
 
     }
 
     private void filterDetail(String newText) {
 
         List<Meals> list = new ArrayList<>();
-        for (Meals m: meals) {
-            if(list!=null) {
-                if(m.getStrMeal().toLowerCase().contains(newText.toLowerCase())) {
-                    list.add(m);
-                }
+        for (Meals m : meals) {
+            if (m.getStrMeal().toLowerCase().contains(newText.toLowerCase())) {
+                list.add(m);
             }
         }
+
         if(list.isEmpty()) {
                 Toast.makeText(this, "No results found", Toast.LENGTH_SHORT).show();
         }else{

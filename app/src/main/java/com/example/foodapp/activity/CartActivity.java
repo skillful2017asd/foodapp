@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,14 +35,18 @@ public class CartActivity extends AppCompatActivity {
     CartViewModel cartViewModel;
     int item;
     Double price;
+    String userid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_cart);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        userid = user.getUid();
         Paper.init(this);
         setUI();
+        updatacart();
         setData();
         TotalPrice();
     }
@@ -61,23 +66,13 @@ public class CartActivity extends AppCompatActivity {
             public void onChanged(MessModel messModel) {
                 Intent home = new Intent(CartActivity.this,MainActivity.class);
                 startActivity(home);
+                //TotalPrice();
                 Utils.cartList.clear();
-                TotalPrice();
-                Paper.book().delete("cart");
+                Paper.book().delete(userid+"cart");
                 finish();
             }
         });
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String userid = user.getUid();
-        if(Utils.cartList!=null){
-                List<Cart> cartList = Paper.book().read("cart");
-                Utils.cartList = cartList;
-                cartAdapter = new CartAdapter(Utils.cartList,this,() -> {
-                    TotalPrice();
-                });
-            binding.rcvCart.setAdapter(cartAdapter);
-        }
+        updatacart();
 
         binding.btnThanhtoan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +82,17 @@ public class CartActivity extends AppCompatActivity {
                 cartViewModel.checkOut(userid,item,price,cart);
             }
         });
+    }
+
+    private void updatacart() {
+        if(Utils.cartList!=null){
+            List<Cart> cartList = Paper.book().read(userid+"cart");
+            Utils.cartList = cartList;
+            cartAdapter = new CartAdapter(Utils.cartList,this,() -> {
+                TotalPrice();
+            },userid);
+            binding.rcvCart.setAdapter(cartAdapter);
+        }
     }
 
     private void TotalPrice() {
@@ -102,9 +108,6 @@ public class CartActivity extends AppCompatActivity {
         }
 
         binding.tvItem.setText(item+"");
-
-
-
         binding.tvPrice.setText(price+"$");
     }
 }

@@ -19,7 +19,10 @@ import com.example.foodapp.model.MealDetail;
 import com.example.foodapp.retrofit.ResponseMealDetail;
 import com.example.foodapp.untils.Utils;
 import com.example.foodapp.viewModel.ShowDetailViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.paperdb.Paper;
@@ -31,6 +34,8 @@ public class ShowDetailActivity extends AppCompatActivity {
     ActivityShowDetailBinding binding;
     int amount =0;
     Intent intent;
+    FirebaseUser user ;
+    String userid;
 
     MealDetail mealDetail;
     @Override
@@ -39,6 +44,8 @@ public class ShowDetailActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this,R.layout.activity_show_detail);
         Paper.init(this);
         intent = getIntent();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        userid = user.getUid();
         int id = getIntent().getIntExtra("idmeals",0);
         getData(id);
         eventClick();
@@ -46,8 +53,8 @@ public class ShowDetailActivity extends AppCompatActivity {
     }
 
     private void showData(int id) {
-        if(Paper.book().read("cart")!=null){
-            List<Cart> mlist =Paper.book().read("cart");
+        if(Paper.book().read(userid+"cart")!=null){
+            List<Cart> mlist =Paper.book().read(userid+"cart");
             Utils.cartList = mlist;
         }
         if(Utils.cartList!=null){
@@ -89,6 +96,9 @@ public class ShowDetailActivity extends AppCompatActivity {
     }
 
     private void addToCard(int amount) {
+        if (Utils.cartList == null) {
+            Utils.cartList = new ArrayList<>();
+        }
         boolean checkExit = false;
         int n=0;
         if(Utils.cartList.size()>0){
@@ -109,7 +119,7 @@ public class ShowDetailActivity extends AppCompatActivity {
             Utils.cartList.add(cart);
         }
         Toast.makeText(this,"Add to card success",Toast.LENGTH_SHORT).show();
-        Paper.book().write("cart", Utils.cartList);
+        Paper.book().write(userid+"cart", Utils.cartList);
         setResult(Activity.RESULT_OK,intent);
         finish();
     }
