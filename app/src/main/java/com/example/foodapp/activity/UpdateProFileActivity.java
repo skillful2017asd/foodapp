@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -42,6 +43,7 @@ public class UpdateProFileActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_STORAGE_PERMISSION = 10;
 
     private Uri uri;
+    ProgressDialog dialog;
 
     ActivityResultLauncher<Intent> mactivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
@@ -82,6 +84,7 @@ public class UpdateProFileActivity extends AppCompatActivity {
        binding = DataBindingUtil.setContentView(this,R.layout.activity_update_pro_file);
        Paper.init(this);
         setControl();
+        dialog = new ProgressDialog(this);
     }
 
     private void setControl(){
@@ -100,6 +103,8 @@ public class UpdateProFileActivity extends AppCompatActivity {
     }
 
     private void onClickupdateprofile() {
+        dialog.setMessage("Dang cap nhat");
+        dialog.show();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user==null){
             return;
@@ -117,6 +122,7 @@ public class UpdateProFileActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            dialog.dismiss();
                             Toast.makeText(UpdateProFileActivity.this,"Update success",Toast.LENGTH_SHORT).show();
                             Intent resultIntent = new Intent(UpdateProFileActivity.this,MainActivity.class);
                             resultIntent.setData(uri);
