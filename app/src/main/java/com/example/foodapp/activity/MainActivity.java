@@ -11,10 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.example.foodapp.R;
 import com.example.foodapp.adapter.CategoryAdapter;
 import com.example.foodapp.adapter.MealsAdapter;
@@ -28,6 +31,8 @@ import com.example.foodapp.viewModel.HomeViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -62,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         binding.viewpagerHome.setAdapter(adapter);
         binding.viewpagerHome.setUserInputEnabled(false);
     }
-
 
 
 }

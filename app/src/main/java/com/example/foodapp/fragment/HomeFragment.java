@@ -83,8 +83,6 @@ public class HomeFragment extends Fragment {
             public void onChanged(ResponseMonAnHot responseMonAnHot) {
                 if(responseMonAnHot.isSuccess()){
                     MonAnHotAdapter monAnHotAdapter = new MonAnHotAdapter(responseMonAnHot.getResult());
-
-
                     binding.rcv2.setAdapter(monAnHotAdapter);
                 }
             }

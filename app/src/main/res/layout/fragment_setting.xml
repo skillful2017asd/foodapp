@@ -27,6 +27,7 @@
                 />
         </LinearLayout>
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_setting"
             android:layout_width="170dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
@@ -41,9 +42,10 @@
             android:layout_marginBottom="10dp"
             tools:ignore="Suspicious0dp" />
         <TextView
+            android:id="@+id/tv_fullname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email"
+            android:text="Full name"
             android:textColor="@color/black"
             android:textSize="20sp"
             />
@@ -113,5 +115,32 @@
                 />
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_setting" />
+
+            <TextView
+                android:id="@+id/tv_setting"
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:layout_marginTop="20dp"
+                android:text="Setting"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:textColor="#818080"
+                />
+
+        </LinearLayout>
+
     </LinearLayout>
 </layout>
