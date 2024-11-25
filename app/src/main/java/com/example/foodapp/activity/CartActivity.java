@@ -93,13 +93,27 @@ public class CartActivity extends AppCompatActivity {
                 pushNotification();
             }
         });
+        binding.btnHoadon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //xuatHoaDonFile();
+            }
+        });
     }
+//    private void xuatHoaDonFile() {
+//        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+//        } else {
+//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_done);
+//            Utils.createPdf(this,bitmap,userid,Utils.cartList,price);
+//        }
+//    }
 
     private void pushNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Thông báo từ App Food!";
             String description = "Nhận thông báo về các đơn hàng và ưu đãi mới nhất.";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
 

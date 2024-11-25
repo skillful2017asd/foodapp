@@ -28,17 +28,16 @@ import io.paperdb.Paper;
 
 public class ThongKeActivity extends AppCompatActivity {
 
-    BarChart  barchar;
+    BarChart barchart;
     Toolbar toolbar;
     ArrayList<BarEntry> entries = new ArrayList<>();
-    ArrayList<String> labels = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thong_ke);
 
         Paper.init(this);
-        barchar = findViewById(R.id.barchar);
+        barchart = findViewById(R.id.barchar);
         toolbar = findViewById(R.id.toolbar);
         addControl();
         setSupportActionBar(toolbar);
@@ -72,9 +71,9 @@ public class ThongKeActivity extends AppCompatActivity {
                     dataSet.setValueTextColor(Color.RED);
 
                     BarData data = new BarData(dataSet);
-                    barchar.setData(data);
-                    barchar.animateXY(2000, 2000);
-                    barchar.invalidate();
+                    barchart.setData(data);
+                    barchart.animateXY(2000, 2000);
+                    barchart.invalidate();
                 } else {
                     Log.d("thongke", "Không có dữ liệu để hiển thị.");
                 }

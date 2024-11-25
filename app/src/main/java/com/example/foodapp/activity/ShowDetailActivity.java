@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -34,7 +35,6 @@ public class ShowDetailActivity extends AppCompatActivity {
     ActivityShowDetailBinding binding;
     int amount =0;
     Intent intent;
-    FirebaseUser user ;
     String userid;
 
     MealDetail mealDetail;
@@ -53,16 +53,24 @@ public class ShowDetailActivity extends AppCompatActivity {
     }
 
     private void showData(int id) {
+
         if(Paper.book().read(userid+"cart")!=null){
             List<Cart> mlist =Paper.book().read(userid+"cart");
             Utils.cartList = mlist;
         }
-        if(Utils.cartList!=null){
-            if(Utils.cartList.size()>0){
-                for (int i = 0; i< Utils.cartList.size(); i++){
-                    if(Utils.cartList.get(i).getMealDetail().getId() == id){
+//
+        if(Utils.cartList!=null) {
+            if (Utils.cartList.size() > 0) {
+                boolean found = false;
+                for (int i = 0; i < Utils.cartList.size(); i++) {
+                    if (Utils.cartList.get(i).getMealDetail().getId() == id && Utils.cartList.get(i).getAmount() > 0) {
                         binding.tvCount.setText(Utils.cartList.get(i).getAmount()+"");
+                        found = true;
+                        break;
                     }
+                }
+                if (!found) {
+                    binding.tvCount.setText(amount+"");
                 }
             }else{
                 binding.tvCount.setText(amount+"");
@@ -81,7 +89,7 @@ public class ShowDetailActivity extends AppCompatActivity {
         binding.imgDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Integer.parseInt(binding.tvCount.getText().toString()) > 1){
+                if(Integer.parseInt(binding.tvCount.getText().toString()) > 0){
                     amount = Integer.parseInt(binding.tvCount.getText().toString()) - 1;
                     binding.tvCount.setText(amount+"");
                 }
@@ -113,6 +121,11 @@ public class ShowDetailActivity extends AppCompatActivity {
         if(checkExit){
             Utils.cartList.get(n).setAmount(amount);
         }else{
+            amount = Integer.parseInt(binding.tvCount.getText().toString());
+            if(amount == 0){
+                Toast.makeText(this,"Please choose amount",Toast.LENGTH_SHORT).show();
+                return;
+            }
             Cart cart = new Cart();
             cart.setMealDetail(mealDetail);
             cart.setAmount(amount);

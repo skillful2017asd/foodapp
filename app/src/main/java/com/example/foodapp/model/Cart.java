@@ -1,9 +1,9 @@
 package com.example.foodapp.model;
 
 public class Cart {
-
     MealDetail mealDetail;
     private int amount;
+
 
     public MealDetail getMealDetail() {
         return mealDetail;

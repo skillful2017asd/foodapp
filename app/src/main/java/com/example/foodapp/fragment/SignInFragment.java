@@ -30,7 +30,7 @@ public class SignInFragment extends Fragment {
     ProgressDialog dialogFragment;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_sign_in,container,false);
         // Inflate the layout for this fragment
@@ -52,37 +52,42 @@ public class SignInFragment extends Fragment {
         String email = binding.edtSign1.getText().toString().trim();
         String password = binding.edtSign2.getText().toString().trim();
         String password1 = binding.edtSign3.getText().toString().trim();
-        if(password1.contains(password)) {
 
-
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-
-
-            auth.createUserWithEmailAndPassword(email,password1)
-                    .addOnCompleteListener(getActivity(),new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                dialogFragment.dismiss();
-                                getUser();
-                                Toast.makeText(getActivity(),"Dang ky thanh cong"+email,Toast.LENGTH_SHORT).show();
-                            }else {
-                                dialogFragment.dismiss();
-                                Toast.makeText(getActivity(),"Dang ky that bai"+email,Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(getActivity(), "Please enter a valid email", Toast.LENGTH_SHORT).show();
+            return;
         }
+        if (password.isEmpty() || password.length() < 6) {
+            Toast.makeText(getActivity(), "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!password.equals(password1)) {
+            Toast.makeText(getActivity(), "Passwords don't match", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+
+        auth.createUserWithEmailAndPassword(email,password1)
+                .addOnCompleteListener(getActivity(),new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            dialogFragment.dismiss();
+                            getUser();
+                            Toast.makeText(getActivity(),"Dang ky thanh cong"+email,Toast.LENGTH_SHORT).show();
+                        }else {
+                            dialogFragment.dismiss();
+                            Toast.makeText(getActivity(),"Dang ky that bai"+email,Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void getUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user != null;
-        String userId = user.getUid();
-        String name = user.getEmail();
         Intent intent = new Intent(getActivity(), MainActivity.class);
-        intent.putExtra("userID",userId);
-        intent.putExtra("nameID",name);
         startActivity(intent);
         getActivity().finishAffinity();
     }
